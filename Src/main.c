@@ -46,6 +46,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim10;
+TIM_HandleTypeDef htim11;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -56,20 +57,29 @@ TIM_HandleTypeDef htim10;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_TIM11_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim10){
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	volatile static uint16_t counter = 0;//licznik
+	volatile static uint16_t counter2 = 0;
 
 	++counter; // inkremencjata licznika zczestotliwoscia 2Hz
+	++counter2;
 
-	if(counter == 10) {
+	if(counter == 3) {
 		counter = 0; //wyzeruj conter
-		if(htim10->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
+		if(htim->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
 			HAL_GPIO_TogglePin(LED_Green_GPIO_Port,LED_Green_Pin);
 
+		}
+	}
+	if(counter2 == 5){
+		counter2 = 0;
+		if(htim->Instance == TIM11){// je¿eli przerwaniee pochodzi od timera 10
+			HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
 		}
 	}
 
@@ -110,8 +120,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM10_Init();
+  MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
+  HAL_TIM_Base_Start_IT(&htim11);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -203,6 +215,22 @@ static void MX_TIM10_Init(void)
   htim10.Init.Period = 8999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* TIM11 init function */
+static void MX_TIM11_Init(void)
+{
+
+  htim11.Instance = TIM11;
+  htim11.Init.Prescaler = 9999;
+  htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim11.Init.Period = 2249;
+  htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
