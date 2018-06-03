@@ -59,9 +59,18 @@ static void MX_TIM10_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htmi10){
-	if(hti->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
-		HAL_GPIO_TogglePin(LED_Green_GPIO_Port,LED_Green_Pin);
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim10){
+
+	volatile static uint16_t counter = 0;//licznik
+
+	++counter; // inkremencjata licznika zczestotliwoscia 2Hz
+
+	if(counter == 10) {
+		counter = 0; //wyzeruj conter
+		if(htim10->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
+			HAL_GPIO_TogglePin(LED_Green_GPIO_Port,LED_Green_Pin);
+
+		}
 	}
 
 }
