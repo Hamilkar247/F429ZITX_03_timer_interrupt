@@ -65,27 +65,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim10){
 
 	volatile static uint16_t counter = 0;//licznik
 
-	volatile static uint16_t counter2 = 0;//licznik
-
 	++counter; // inkremencjata licznika zczestotliwoscia 2Hz
-	++counter2; // inkremencjata licznika zczestotliwoscia 2Hz
 	if(counter == 10) {
 		counter = 0; //wyzeruj conter
-		counter2 = 8;
 		if(htim10->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
 			HAL_GPIO_TogglePin(LED_Green_GPIO_Port,LED_Green_Pin);
 
 		}
 	}
-	if(counter2 == 10){
-		counter2 = 0;
-		if(htim10->Instance == TIM10){ // je¿eli przerwaniee pochodzi od timera 10
-			HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
-		}
-	}
-
-
-
 }
 /* USER CODE END PFP */
 
@@ -231,7 +218,7 @@ static void MX_TIM11_Init(void)
   htim11.Instance = TIM11;
   htim11.Init.Prescaler = 9999;
   htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim11.Init.Period = 8999;
+  htim11.Init.Period = 2249;
   htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
   {
